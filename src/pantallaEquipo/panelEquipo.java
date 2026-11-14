@@ -14,6 +14,12 @@ public class panelEquipo extends javax.swing.JFrame {
     private gestorEquipo gestorequipo;
     private String nombreentrenador = "Entrenador";
 
+    public interface Listener {
+        void equipoListo(List<Modelo.Pokemon> equipo);
+    }
+
+    private Listener listener;
+
     public panelEquipo() {
         initComponents();
         inicializarModelos();
@@ -23,6 +29,10 @@ public class panelEquipo extends javax.swing.JFrame {
         this.nombreentrenador = nombreentrenador;
         initComponents();
         inicializarModelos();
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     private void inicializarModelos() {
@@ -66,7 +76,7 @@ public class panelEquipo extends javax.swing.JFrame {
         btn_crear = new javax.swing.JButton();
         btn_comenzar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Batallas Pokémon - Armado de Equipo");
 
         lbl_titulo.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -303,6 +313,10 @@ public class panelEquipo extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if (listener != null) {
+            listener.equipoListo(obtenerEquipoParaBatalla());
+            return;
+        }
         Pokemon primerpokemon = modeloequipo.getElementAt(0);
         JOptionPane.showMessageDialog(this,
                 "¡Comenzando batalla con " + modeloequipo.size() + " Pokémon!\n"
@@ -328,6 +342,26 @@ public class panelEquipo extends javax.swing.JFrame {
 
     public void agregarAlCatalogo(Pokemon nuevopokemon) {
         modelocatalogo.addElement(nuevopokemon);
+    }
+
+    public List<Modelo.Pokemon> obtenerEquipoParaBatalla() {
+        List<Modelo.Pokemon> lista = new ArrayList<>();
+        for (int i = 0; i < modeloequipo.size(); i++) {
+            Pokemon p = modeloequipo.getElementAt(i);
+            String tipo = p.getTipo().name();
+            Modelo.Pokemon convertido;
+            if (tipo.equals("FUEGO")) {
+                convertido = new Modelo.PokemonFuego(p.getNombre(), p.getNivel(), p.getPsMaximos(), p.getAtaque(), p.getDefensa(), p.getVelocidad());
+            } else if (tipo.equals("AGUA")) {
+                convertido = new Modelo.PokemonAgua(p.getNombre(), p.getNivel(), p.getPsMaximos(), p.getAtaque(), p.getDefensa(), p.getVelocidad());
+            } else if (tipo.equals("PLANTA")) {
+                convertido = new Modelo.PokemonPlanta(p.getNombre(), p.getNivel(), p.getPsMaximos(), p.getAtaque(), p.getDefensa(), p.getVelocidad());
+            } else {
+                convertido = new Modelo.PokemonElectrico(p.getNombre(), p.getNivel(), p.getPsMaximos(), p.getAtaque(), p.getDefensa(), p.getVelocidad());
+            }
+            lista.add(convertido);
+        }
+        return lista;
     }
 
     public List<Pokemon> obtenerListaEquipo() {
