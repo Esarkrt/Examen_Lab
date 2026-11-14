@@ -21,14 +21,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import pantallaEquipo.*;
 
-/**
- * Clase principal: arma la ventana y conecta las pantallas.
- *
- * Flujo: Inicio -> Batalla -> Resultado -> Inicio.
- *
- * @author Garrett-PC
- */
+
 public class Examen_Lab {
 
     public static void main(String[] args) {
