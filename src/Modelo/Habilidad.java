@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package examen_lab;
+package Modelo;
 
 /**
  *
  * @author Garrett-PC
  */
-public class AccionBatalla {
-    
+public interface Habilidad {
+    String getNombre();
+
+    boolean puedeUsar(Pokemon usuario);
+
+    String ejecutar(Pokemon usuario, Pokemon objetivo);
 }
