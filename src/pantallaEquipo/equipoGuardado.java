@@ -31,10 +31,10 @@ enum TipoPokemon {
     FUEGO, AGUA, PLANTA, ELECTRICO;
 
     private static final double[][] tablaefectividad = {
-        /* FUEGO */     {0.5, 0.5, 2.0, 1.0},
-        /* AGUA */      {2.0, 0.5, 0.5, 1.0},
-        /* PLANTA */    {0.5, 2.0, 0.5, 1.0},
-        /* ELECTRICO */ {1.0, 2.0, 0.5, 0.5}
+        {0.5, 0.5, 2.0, 1.0},
+        {2.0, 0.5, 0.5, 1.0},
+        {0.5, 2.0, 0.5, 1.0},
+        {1.0, 2.0, 0.5, 0.5}
     };
 
     public double obtenerMultiplicador(TipoPokemon defensor) {

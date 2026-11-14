@@ -95,7 +95,16 @@ public class formularioPokemon extends javax.swing.JFrame {
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         String nombrelimpio = txt_nombre.getText().trim();
 
-        if (nombrelimpio.length() < 3 || nombrelimpio.length() > 10 || !nombrelimpio.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]+")) {
+        boolean caracteresvalidos = true;
+        for (int i = 0; i < nombrelimpio.length(); i++) {
+            char letra = nombrelimpio.charAt(i);
+            if (!Character.isLetterOrDigit(letra) && letra != ' ') {
+                caracteresvalidos = false;
+                break;
+            }
+        }
+
+        if (nombrelimpio.length() < 3 || nombrelimpio.length() > 10 || !caracteresvalidos) {
             JOptionPane.showMessageDialog(this,
                     "El nombre debe tener entre 3 y 10 caracteres (solo letras, números y espacios).",
                     "Nombre no válido",
@@ -103,7 +112,41 @@ public class formularioPokemon extends javax.swing.JFrame {
             return;
         }
 
-        
+        String tipotexto = (String) cbo_tipo.getSelectedItem();
+        Pokemon nuevopokemon;
+
+        switch (tipotexto) {
+            case "FUEGO":
+                nuevopokemon = new PokemonFuego(nombrelimpio, 90, 14, 9, 11);
+                break;
+            case "AGUA":
+                nuevopokemon = new PokemonAgua(nombrelimpio, 95, 12, 11, 10);
+                break;
+            case "PLANTA":
+                nuevopokemon = new PokemonPlanta(nombrelimpio, 95, 12, 10, 9);
+                break;
+            case "ELECTRICO":
+            default:
+                nuevopokemon = new PokemonElectrico(nombrelimpio, 85, 14, 8, 15);
+                break;
+        }
+
+        if (panelequipo != null) {
+            if (panelequipo.existeEnCatalogo(nombrelimpio)) {
+                JOptionPane.showMessageDialog(this,
+                        "Ya existe un Pokémon con ese nombre en el catálogo.",
+                        "Nombre duplicado",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            panelequipo.agregarAlCatalogo(nuevopokemon);
+        }
+
+        JOptionPane.showMessageDialog(this,
+                "¡" + nombrelimpio + " (" + tipotexto + ") fue agregado al catálogo!",
+                "Pokémon creado",
+                JOptionPane.INFORMATION_MESSAGE);
+        dispose();
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
