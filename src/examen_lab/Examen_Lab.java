@@ -15,8 +15,8 @@ import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import pantallaEquipo.panelEquipo;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -45,21 +45,22 @@ public class Examen_Lab {
         panelInicio.setListener(new PanelInicio.Listener() {
             @Override
             public void continuar(String nombre) {
-                List<Pokemon> catalogo = Catalogo.crear();
-                List<Pokemon> equipo = new ArrayList<>();
-
-                // Equipo temporal mientras se integra la pantalla de selección (4.2).
-                equipo.add(catalogo.get(0)); // Charmander
-                equipo.add(catalogo.get(2)); // Squirtle
-                equipo.add(catalogo.get(4)); // Bulbasaur
-
-                try {
-                    panelBatalla.iniciarBatalla(nombre, equipo, catalogo);
-                    tarjetas.show(contenedor, "batalla");
-                } catch (CloneNotSupportedException ex) {
-                    JOptionPane.showMessageDialog(ventana, "No se pudo iniciar la batalla.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                panelEquipo panelSeleccion = new panelEquipo(nombre);
+                panelSeleccion.setListener(new panelEquipo.Listener() {
+                    @Override
+                    public void equipoListo(List<Pokemon> equipo) {
+                        panelSeleccion.dispose();
+                        try {
+                            panelBatalla.iniciarBatalla(nombre, equipo, Catalogo.crear());
+                            tarjetas.show(contenedor, "batalla");
+                            ventana.toFront();
+                        } catch (CloneNotSupportedException ex) {
+                            JOptionPane.showMessageDialog(ventana, "No se pudo iniciar la batalla.",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+                panelSeleccion.setVisible(true);
             }
         });
 
