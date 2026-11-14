@@ -5,6 +5,7 @@ import P_Incio_Registro.ValidadorNombre;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -16,6 +17,11 @@ import javax.swing.JTextField;
 
 public class PanelInicio extends JPanel implements ActionListener {
 
+    public interface Listener {
+        void continuar(String nombre);
+    }
+
+    private Listener listener;
     private JLabel lblLogo, lblTitulo, lblSubtitulo, lblNombre;
     private JTextField txtNombre;
     private JButton btnContinuar, btnInstrucciones, btnSalir;
@@ -71,8 +77,9 @@ public class PanelInicio extends JPanel implements ActionListener {
         btnSalir.addActionListener(this);
         add(btnSalir);
 
-        lblFondo = new JLabel();
-        lblFondo.setIcon(new ImageIcon(getClass().getResource("/imagenes/fondo.png")));
+        ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/imagenes/fondo.png"));
+        Image fondoEscalado = iconoFondo.getImage().getScaledInstance(900, 600, Image.SCALE_SMOOTH);
+        lblFondo = new JLabel(new ImageIcon(fondoEscalado));
         lblFondo.setBounds(0, 0, 900, 600);
         add(lblFondo);
     }
@@ -102,7 +109,21 @@ public class PanelInicio extends JPanel implements ActionListener {
         String nombreLimpio = ValidadorNombre.recortar(nombre);
         txtNombre.setText(nombreLimpio);
 
-        JOptionPane.showMessageDialog(this, "¡Bienvenido, entrenador " + nombreLimpio + "!\n"+"Tu nombre fue registrado correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+        if (listener != null) {
+            listener.continuar(nombreLimpio);
+        } else {
+            JOptionPane.showMessageDialog(this, "¡Bienvenido, entrenador " + nombreLimpio + "!\n"
+                    + "Tu nombre fue registrado correctamente.",
+                    "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public void setNombreEntrenador(String nombre) {
+        txtNombre.setText(nombre);
     }
 
     private void mostrarInstrucciones() {
